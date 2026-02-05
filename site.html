@@ -1,0 +1,176 @@
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-logo">
+            <img src="https://4394269.fs1.hubspotusercontent-na1.net/hubfs/4394269/di%20logo%20dark.png" alt="Dental Intelligence" class="logo-image">
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-container">
+        <div class="hero-badge">2026 State of Dentistry Report</div>
+        <h1 class="hero-title">How Does Your Practice Stack Up?</h1>
+        <p class="hero-subtitle">According to the latest Dental Intelligence State of Dentistry Report, practices vary widely in their Hygiene Pre-Appointment rates. See where you stand compared to thousands of practices nationwide.</p>
+    </div>
+</section>
+
+<!-- Main Calculator Section -->
+<section class="calculator-section">
+    <div class="container">
+        <!-- Screen 1: Input -->
+        <div id="inputScreen" class="screen active">
+            <div class="calculator-intro">
+                <h2>Check Your Benchmark</h2>
+                <p>Enter your current Hygiene Pre-Appointment percentage to see how you compare to industry standards.</p>
+            </div>
+            <div class="input-group">
+                <label for="preAppointmentPercent">Your Hygiene Pre-Appointment %</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="number" 
+                        id="preAppointmentPercent" 
+                        placeholder="Enter percentage"
+                        min="0"
+                        max="100"
+                        step="1"
+                    >
+                    <span class="percent-sign">%</span>
+                </div>
+                <div id="errorMessage" class="error-message">Please enter a valid percentage between 0 and 100</div>
+            </div>
+            <button class="button" id="calculateBtn">See My Results</button>
+            
+            <div class="benchmark-preview">
+                <div class="preview-title">Industry Benchmarks</div>
+                <div class="preview-stats">
+                    <div class="preview-stat">
+                        <div class="preview-label">Top 10%</div>
+                        <div class="preview-value">80%</div>
+                    </div>
+                    <div class="preview-stat">
+                        <div class="preview-label">Average</div>
+                        <div class="preview-value">59%</div>
+                    </div>
+                    <div class="preview-stat">
+                        <div class="preview-label">Bottom 10%</div>
+                        <div class="preview-value">26%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Results -->
+        <div id="resultsScreen" class="screen">
+            <div class="result-card">
+                <div class="result-emoji" id="resultEmoji">🎉</div>
+                <div class="result-title" id="resultTitle">Great Work!</div>
+                <div class="result-message" id="resultMessage">Your practice is performing above average!</div>
+                
+                <!-- Bell Curve Visualization -->
+                <div class="bell-curve-section">
+                    <h3>Where You Stand</h3>
+                    <div class="bell-curve-container">
+                        <svg id="bellCurveSVG" viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Bell curve showing your position">
+                            <!-- Bell curve will be drawn here by JavaScript -->
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="benchmark-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Your Practice</span>
+                        <span class="stat-value your-stat" id="yourStat">75%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Top 10% of Practices</span>
+                        <span class="stat-value">80%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Average Practice</span>
+                        <span class="stat-value">59%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Bottom 10% of Practices</span>
+                        <span class="stat-value">26%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h2>Want to See Where You Stack Up?</h2>
+                <p>Get a comprehensive analysis of all your core KPIs with a free Practice Snapshot</p>
+                <button class="cta-button" id="snapshotBtn">Request Practice Snapshot</button>
+            </div>
+            
+            <div class="result-footer">
+                <button class="link-button" id="tryAgainBtn">← Try Another Percentage</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why It Matters Section -->
+<section class="why-matters">
+    <div class="why-container">
+        <h2>Why Hygiene Pre-Appointments Matter</h2>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-icon">📅</div>
+                <h3>Reduce Gaps</h3>
+                <p>Pre-booked hygiene appointments minimize schedule gaps and maximize chair time utilization.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">💰</div>
+                <h3>Increase Revenue</h3>
+                <p>Consistent hygiene visits lead to better treatment acceptance and higher practice revenue.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">❤️</div>
+                <h3>Better Patient Care</h3>
+                <p>Regular hygiene appointments ensure your patients maintain optimal oral health.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How DI Can Help Section -->
+<section class="di-features">
+    <div class="features-container">
+        <h2>Transform Your Hygiene Pre-Appointments</h2>
+        <p class="features-subtitle">Powerful automation that fills your schedule and keeps patients coming back</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🌅</div>
+                <h3>Morning Huddle</h3>
+                <p>Start every day with clarity. Instantly spot who left yesterday without their next appointment and catch today's patients before they leave—all in one glance.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>TouchPoints</h3>
+                <p>Set it and forget it! Automatically reach patients at exactly the right moment—when they're due for hygiene—so your schedule fills itself without lifting a finger.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✅</div>
+                <h3>Team Tasks</h3>
+                <p>Never lose a patient to the cracks. Track who needs that personal call after automated reminders, turning your team into retention rockstars with zero guesswork.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="https://4394269.fs1.hubspotusercontent-na1.net/hubfs/4394269/di%20logo%20dark.png" alt="Dental Intelligence" class="footer-logo-image">
+            </div>
+            <p class="footer-tagline">Intelligently shape the future of your practice</p>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Dental Intelligence. Data from State of Dentistry 2026 Report.</p>
+        </div>
+    </div>
+</footer>
