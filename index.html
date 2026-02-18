@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hygiene Pre-Appointment Benchmark | Dental Intelligence</title>
+    <title>Where Does Your Practice Rank? | Dental Intelligence</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,182 +11,138 @@
 </head>
 <body>
 
-<!-- Navigation -->
-<nav class="navbar">
-    <div class="nav-container">
-        <div class="nav-logo">
-            <img src="https://4394269.fs1.hubspotusercontent-na1.net/hubfs/4394269/di%20logo%20dark.png" alt="Dental Intelligence" class="logo-image">
-        </div>
-    </div>
-</nav>
-
-<!-- Hero Section -->
+<!-- HERO SECTION -->
 <section class="hero">
-    <div class="hero-container">
-        <div class="hero-badge">2026 State of Dentistry Report</div>
-        <h1 class="hero-title">How Does Your Practice Stack Up?</h1>
-        <p class="hero-subtitle">According to the latest Dental Intelligence State of Dentistry Report, practices vary widely in their Hygiene Pre-Appointment rates. See where you stand compared to thousands of practices nationwide.</p>
+    <div class="hero-inner">
+        <div class="hero-logo">
+            <img src="https://4394269.fs1.hubspotusercontent-na1.net/hubfs/4394269/di%20logo%20dark.png" alt="Dental Intelligence" class="logo-img">
+        </div>
+        <h1 class="hero-title">Where does your practice rank?</h1>
+        <p class="hero-sub">Are you the best in the biz, or are you leaving chairs empty?<br>Finding out only takes 10 seconds.</p>
+
+        <!-- Calculator Card -->
+        <div class="calc-card">
+            <h2 class="calc-title">Find your rank now</h2>
+            <p class="calc-desc">Enter your current <strong>hygiene pre-appointment percentage</strong> to see how you compare to industry standards.</p>
+            <div class="input-row">
+                <input type="number" id="percentInput" class="percent-input" placeholder="Enter percentage" min="0" max="100">
+                <span class="pct-label">%</span>
+            </div>
+            <div id="errorMsg" class="error-msg">Please enter a valid number between 0 and 100.</div>
+            <button class="btn-primary" id="seeResultsBtn">See Results</button>
+            <p class="calc-footnote">Not sure of your number? Get a <a href="#snapshot" class="link-green">free practice snapshot here</a>.</p>
+        </div>
     </div>
 </section>
 
-<!-- Main Calculator Section -->
-<section class="calculator-section">
-    <div class="container">
-        <!-- Screen 1: Input -->
-        <div id="inputScreen" class="screen active">
-            <div class="calculator-intro">
-                <h2>Check Your Benchmark</h2>
-                <p>Enter your current Hygiene Pre-Appointment percentage to see how you compare to industry standards.</p>
+<!-- RESULTS SECTION (hidden until calculated) -->
+<section class="results-section" id="resultsSection" style="display:none;">
+    <div class="results-inner">
+        <div class="result-badge" id="resultBadge"></div>
+        <h2 class="result-title" id="resultTitle"></h2>
+        <p class="result-msg" id="resultMsg"></p>
+        <button class="btn-link" id="tryAgainBtn">← Try a different number</button>
+    </div>
+</section>
+
+<!-- BENCHMARKS SECTION -->
+<section class="benchmarks-section">
+    <div class="section-inner">
+        <h2 class="section-title">Here are where the industry benchmarks are</h2>
+
+        <!-- Benchmark Labels -->
+        <div class="benchmark-labels">
+            <div class="benchmark-label">
+                <span class="bm-tier">Bottom 10%</span>
+                <span class="bm-value">26%</span>
             </div>
-            <div class="input-group">
-                <label for="preAppointmentPercent">Your Hygiene Pre-Appointment %</label>
-                <div class="input-wrapper">
-                    <input 
-                        type="number" 
-                        id="preAppointmentPercent" 
-                        placeholder="Enter percentage"
-                        min="0"
-                        max="100"
-                        step="1"
-                    >
-                    <span class="percent-sign">%</span>
-                </div>
-                <div id="errorMessage" class="error-message">Please enter a valid percentage between 0 and 100</div>
+            <div class="benchmark-label center">
+                <span class="bm-tier">Average</span>
+                <span class="bm-value">59%</span>
             </div>
-            <button class="button" id="calculateBtn">See My Results</button>
-            
-            <div class="benchmark-preview">
-                <div class="preview-title">Industry Benchmarks</div>
-                <div class="preview-stats">
-                    <div class="preview-stat">
-                        <div class="preview-label">Top 10%</div>
-                        <div class="preview-value">80%</div>
-                    </div>
-                    <div class="preview-stat">
-                        <div class="preview-label">Average</div>
-                        <div class="preview-value">59%</div>
-                    </div>
-                    <div class="preview-stat">
-                        <div class="preview-label">Bottom 10%</div>
-                        <div class="preview-value">26%</div>
-                    </div>
-                </div>
+            <div class="benchmark-label right">
+                <span class="bm-tier">Top 10%</span>
+                <span class="bm-value">80%</span>
             </div>
         </div>
 
-        <!-- Screen 2: Results -->
-        <div id="resultsScreen" class="screen">
-            <div class="result-card">
-                <div class="result-emoji" id="resultEmoji">🎉</div>
-                <div class="result-title" id="resultTitle">Great Work!</div>
-                <div class="result-message" id="resultMessage">Your practice is performing above average!</div>
-                
-                <!-- Bell Curve Visualization -->
-                <div class="bell-curve-section">
-                    <h3>Where You Stand</h3>
-                    <div class="bell-curve-container">
-                        <svg id="bellCurveSVG" viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Bell curve showing your position">
-                            <!-- Bell curve will be drawn here by JavaScript -->
-                        </svg>
-                    </div>
-                </div>
-                
-                <div class="benchmark-stats">
-                    <div class="stat-row">
-                        <span class="stat-label">Your Practice</span>
-                        <span class="stat-value your-stat" id="yourStat">75%</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Top 10% of Practices</span>
-                        <span class="stat-value">80%</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Average Practice</span>
-                        <span class="stat-value">59%</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Bottom 10% of Practices</span>
-                        <span class="stat-value">26%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="cta-section">
-                <h2>Want to See Where You Stack Up?</h2>
-                <p>Get a comprehensive analysis of all your core KPIs with a free Practice Snapshot</p>
-                <button class="cta-button" id="snapshotBtn">Request Practice Snapshot</button>
-            </div>
-            
-            <div class="result-footer">
-                <button class="link-button" id="tryAgainBtn">← Try Another Percentage</button>
+        <!-- Bell Curve -->
+        <div class="curve-wrap">
+            <svg id="bellCurveSVG" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Bell curve">
+            </svg>
+            <div class="curve-axis-labels">
+                <span>0%</span>
+                <span>Average 59%</span>
+                <span>100%</span>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Why It Matters Section -->
-<section class="why-matters">
-    <div class="why-container">
-        <h2>Why Hygiene Pre-Appointments Matter</h2>
+<!-- WHY IT MATTERS -->
+<section class="why-section">
+    <div class="section-inner">
+        <h2 class="section-title">Why Hygiene Pre-Appointment % Matters</h2>
         <div class="why-grid">
             <div class="why-card">
-                <div class="why-icon">📅</div>
-                <h3>Reduce Gaps</h3>
-                <p>Pre-booked hygiene appointments minimize schedule gaps and maximize chair time utilization.</p>
-            </div>
-            <div class="why-card">
-                <div class="why-icon">💰</div>
+                <img src="icon-revenue.png" alt="Increase Revenue" class="why-icon-img">
                 <h3>Increase Revenue</h3>
-                <p>Consistent hygiene visits lead to better treatment acceptance and higher practice revenue.</p>
+                <p>Consistency boosts treatment acceptance and revenue follows</p>
             </div>
             <div class="why-card">
-                <div class="why-icon">❤️</div>
-                <h3>Better Patient Care</h3>
-                <p>Regular hygiene appointments ensure your patients maintain optimal oral health.</p>
+                <img src="icon-scheduling.png" alt="Reduce Scheduling Gaps" class="why-icon-img">
+                <h3>Reduce Scheduling Gaps</h3>
+                <p>Fill those chairs and forecast production months in advance</p>
+            </div>
+            <div class="why-card">
+                <img src="icon-patient.png" alt="Better Patient Outcomes" class="why-icon-img">
+                <h3>Better Patient Outcomes</h3>
+                <p>Stay on track with preventative care and catch problems early</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- How DI Can Help Section -->
-<section class="di-features">
-    <div class="features-container">
-        <h2>Transform Your Hygiene Pre-Appointments</h2>
-        <p class="features-subtitle">Powerful automation that fills your schedule and keeps patients coming back</p>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🌅</div>
-                <h3>Morning Huddle</h3>
-                <p>Start every day with clarity. Instantly spot who left yesterday without their next appointment and catch today's patients before they leave—all in one glance.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>TouchPoints</h3>
-                <p>Set it and forget it! Automatically reach patients at exactly the right moment—when they're due for hygiene—so your schedule fills itself without lifting a finger.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">✅</div>
-                <h3>Team Tasks</h3>
-                <p>Never lose a patient to the cracks. Track who needs that personal call after automated reminders, turning your team into retention rockstars with zero guesswork.</p>
+<!-- DRIVE NUMBERS UP WITH DI -->
+<section class="di-section">
+    <div class="di-inner">
+        <div class="di-left">
+            <img src="morning-huddle.png" alt="Morning Huddle Dashboard" class="product-screenshot">
+        </div>
+        <div class="di-right">
+            <h2 class="section-title left">Drive those numbers up with DI</h2>
+            <p class="di-subtitle">Fill your schedule and keep patients coming back without breaking a sweat</p>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3>Morning Huddle</h3>
+                    <p>Start every day with clarity. Instantly spot who left yesterday without their next appointment and catch today's patients before they leave–all in one glance.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>TouchPoints</h3>
+                    <p>Set it and forget it! Automatically reach patients at exactly the right moment–when they're due for hygiene–so your schedule fills itself without lifting a finger.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Team Tasks</h3>
+                    <p>Never lose a patient through the cracks. Track who needs that personal call after automated reminders, turning your team into retention rockstars with zero guesswork.</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="footer-container">
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="https://4394269.fs1.hubspotusercontent-na1.net/hubfs/4394269/di%20logo%20dark.png" alt="Dental Intelligence" class="footer-logo-image">
-            </div>
-            <p class="footer-tagline">Intelligently shape the future of your practice</p>
+<!-- PRACTICE SNAPSHOT CTA -->
+<section class="snapshot-section" id="snapshot">
+    <div class="snapshot-inner">
+        <div class="snapshot-left">
+            <h2 class="snapshot-title">Get a Practice Snapshot</h2>
+            <p class="snapshot-desc">We can get you a comprehensive look at your practice</p>
+            <button class="btn-primary" id="snapshotBtn">Get Your Free Snapshot</button>
         </div>
-        <div class="footer-bottom">
-            <p>© 2026 Dental Intelligence. Data from State of Dentistry 2026 Report.</p>
+        <div class="snapshot-right">
+            <img src="snapshot-book.png" alt="Practice Snapshot Report" class="snapshot-book-img">
         </div>
     </div>
-</footer>
+</section>
 
 <script src="script.js"></script>
 </body>
