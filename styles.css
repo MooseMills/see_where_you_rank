@@ -449,6 +449,7 @@ input[type="number"]:focus {
 .why-card p {
     font-size: 18px;
     line-height: 1.6;
+    color: #002955;
 }
 
 /* DI FEATURES */
@@ -473,6 +474,7 @@ input[type="number"]:focus {
     text-align: center;
     font-size: 18px;
     margin-bottom: 60px;
+    color: #002955;
 }
 
 .features-grid {
@@ -534,7 +536,7 @@ input[type="number"]:focus {
 
 .snapshot-content p {
     font-size: 18px;
-    color: #687887;
+    color: #002955;
     margin-bottom: 32px;
     line-height: 1.6;
 }
