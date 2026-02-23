@@ -47,6 +47,21 @@ document.addEventListener('DOMContentLoaded', function() {
             resultTitle.textContent = "Let's Get Started!";
             resultMessage.textContent = `At ${value}%, there's tremendous potential for improvement. Don't worry – we've helped countless practices transform their performance. Together, we can develop a strategy to dramatically improve your hygiene pre-appointments.`;
         }
+const contextLabel = document.getElementById('contextLabel');
+    if (value >= 80) {
+        contextLabel.textContent = 'Top 10%';
+        contextLabel.className = 'context-label top';
+    } else if (value >= 59) {
+        contextLabel.textContent = 'Above Average';
+        contextLabel.className = 'context-label above';
+    } else if (value >= 26) {
+        contextLabel.textContent = 'Below Average';
+        contextLabel.className = 'context-label below';
+    } else {
+        contextLabel.textContent = 'Bottom 10%';
+        contextLabel.className = 'context-label bottom';
+    }
+
 
         // Draw the bell curve with user's position
         drawBellCurve(value);
@@ -60,233 +75,203 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Draw bell curve visualization
-    function drawBellCurve(userValue) {
-        const svg = document.getElementById('bellCurveSVG');
-        if (!svg) return;
-        
-        // Clear previous content
-        svg.innerHTML = '';
-        
-        // Add CSS custom properties
-        const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
-        style.textContent = `
-            :root {
-                --curve: #0060C6;
-                --axis: #9ca3af;
-                --blue: #0060C6;
-                --green: #00AB63;
-                --text: #002955;
-                --muted: #687887;
-            }
-        `;
-        svg.appendChild(style);
-        
-        const width = 1000;
-        const height = 320;
-        const padding = 60;
-        const chartHeight = height - 100;
-        
-        // Define the bell curve
-        const mean = 59;
-        const stdDev = 13;
-        
-        // Generate bell curve points
-        const points = [];
-        for (let x = 0; x <= 100; x += 0.5) {
-            const y = normalDistribution(x, mean, stdDev);
-            const scaledX = padding + ((x / 100) * (width - 2 * padding));
-            const scaledY = height - 60 - (y * chartHeight * 30); // Increased to 30 for dramatic curve
-            points.push({ x: scaledX, y: scaledY, percent: x });
-        }
-        
-        // Split points at user's value for two-tone fill
-        const userIndex = points.findIndex(p => p.percent >= userValue);
-        const leftPoints = points.slice(0, userIndex + 1);
-        const rightPoints = points.slice(userIndex);
-        
-        // Create gradient fills
-        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-        
-        // Blue gradient (below average)
-        const blueGrad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-        blueGrad.setAttribute('id', 'blueGradient');
-        blueGrad.setAttribute('x1', '0%');
-        blueGrad.setAttribute('y1', '0%');
-        blueGrad.setAttribute('x2', '0%');
-        blueGrad.setAttribute('y2', '100%');
-        const blueStop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        blueStop1.setAttribute('offset', '0%');
-        blueStop1.setAttribute('style', 'stop-color:#0060C6;stop-opacity:0.3');
-        const blueStop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        blueStop2.setAttribute('offset', '100%');
-        blueStop2.setAttribute('style', 'stop-color:#0060C6;stop-opacity:0.05');
-        blueGrad.appendChild(blueStop1);
-        blueGrad.appendChild(blueStop2);
-        
-        // Green gradient (above average or at user position)
-        const greenGrad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-        greenGrad.setAttribute('id', 'greenGradient');
-        greenGrad.setAttribute('x1', '0%');
-        greenGrad.setAttribute('y1', '0%');
-        greenGrad.setAttribute('x2', '0%');
-        greenGrad.setAttribute('y2', '100%');
-        const greenStop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        greenStop1.setAttribute('offset', '0%');
-        greenStop1.setAttribute('style', 'stop-color:#00AB63;stop-opacity:0.3');
-        const greenStop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        greenStop2.setAttribute('offset', '100%');
-        greenStop2.setAttribute('style', 'stop-color:#00AB63;stop-opacity:0.05');
-        greenGrad.appendChild(greenStop1);
-        greenGrad.appendChild(greenStop2);
-        
-        defs.appendChild(blueGrad);
-        defs.appendChild(greenGrad);
-        svg.appendChild(defs);
-        
-        const baseline = height - 60;
-        
-        // Fill left side (blue)
-        if (leftPoints.length > 1) {
-            const leftPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            const leftD = `M ${padding},${baseline} L ${leftPoints.map(p => `${p.x},${p.y}`).join(' L ')} L ${leftPoints[leftPoints.length - 1].x},${baseline} Z`;
-            leftPath.setAttribute('d', leftD);
-            leftPath.setAttribute('fill', 'url(#blueGradient)');
-            svg.appendChild(leftPath);
-        }
-        
-        // Fill right side (green)
-        if (rightPoints.length > 1) {
-            const rightPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            const rightD = `M ${rightPoints[0].x},${baseline} L ${rightPoints.map(p => `${p.x},${p.y}`).join(' L ')} L ${width - padding},${baseline} Z`;
-            rightPath.setAttribute('d', rightD);
-            rightPath.setAttribute('fill', 'url(#greenGradient)');
-            svg.appendChild(rightPath);
-        }
-        
-        // Draw the bell curve line
-        const curvePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        const curveD = `M ${points.map(p => `${p.x},${p.y}`).join(' L ')}`;
-        curvePath.setAttribute('d', curveD);
-        curvePath.setAttribute('stroke', '#0060C6');
-        curvePath.setAttribute('stroke-width', '4');
-        curvePath.setAttribute('fill', 'none');
-        curvePath.setAttribute('stroke-linecap', 'round');
-        svg.appendChild(curvePath);
-        
-        // Add baseline axis
-        const baselineEl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        baselineEl.setAttribute('x1', padding);
-        baselineEl.setAttribute('y1', baseline);
-        baselineEl.setAttribute('x2', width - padding);
-        baselineEl.setAttribute('y2', baseline);
-        baselineEl.setAttribute('stroke', '#9ca3af');
-        baselineEl.setAttribute('stroke-width', '2');
-        svg.appendChild(baselineEl);
-        
-        // Add labels
-        const label0 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label0.setAttribute('x', padding);
-        label0.setAttribute('y', baseline + 35);
-        label0.setAttribute('text-anchor', 'start');
-        label0.setAttribute('fill', '#687887');
-        label0.setAttribute('font-weight', '700');
-        label0.setAttribute('font-size', '18');
-        label0.setAttribute('font-family', 'Red Hat Text, sans-serif');
-        label0.textContent = '0%';
-        svg.appendChild(label0);
-        
-        const label100 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label100.setAttribute('x', width - padding);
-        label100.setAttribute('y', baseline + 35);
-        label100.setAttribute('text-anchor', 'end');
-        label100.setAttribute('fill', '#687887');
-        label100.setAttribute('font-weight', '700');
-        label100.setAttribute('font-size', '18');
-        label100.setAttribute('font-family', 'Red Hat Text, sans-serif');
-        label100.textContent = '100%';
-        svg.appendChild(label100);
-        
-        // Add Average marker (59%) on the baseline
-        const avgValue = 59;
-        const avgX = padding + ((avgValue / 100) * (width - 2 * padding));
-        
-        // Tick mark on baseline
-        const avgTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        avgTick.setAttribute('x1', avgX);
-        avgTick.setAttribute('y1', baseline - 10);
-        avgTick.setAttribute('x2', avgX);
-        avgTick.setAttribute('y2', baseline + 10);
-        avgTick.setAttribute('stroke', '#687887');
-        avgTick.setAttribute('stroke-width', '3');
-        avgTick.setAttribute('opacity', '0.7');
-        svg.appendChild(avgTick);
-        
-        // Label below baseline - larger and more readable
-        const avgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        avgText.setAttribute('x', avgX);
-        avgText.setAttribute('y', baseline + 58);
-        avgText.setAttribute('text-anchor', 'middle');
-        avgText.setAttribute('fill', '#687887');
-        avgText.setAttribute('font-weight', '600');
-        avgText.setAttribute('font-size', '15');
-        avgText.setAttribute('font-family', 'Red Hat Text, sans-serif');
-        avgText.textContent = 'Average (59%)';
-        svg.appendChild(avgText);
-        
-        // Draw user's marker
-        const userX = padding + ((userValue / 100) * (width - 2 * padding));
-        const userY = height - 60 - (normalDistribution(userValue, mean, stdDev) * chartHeight * 30);
-        
-        // Vertical line
-        const userLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        userLine.setAttribute('x1', userX);
-        userLine.setAttribute('y1', userY);
-        userLine.setAttribute('x2', userX);
-        userLine.setAttribute('y2', baseline);
-        userLine.setAttribute('stroke', '#0060C6');
-        userLine.setAttribute('stroke-width', '3');
-        userLine.setAttribute('stroke-dasharray', '8,5');
-        svg.appendChild(userLine);
-        
-        // Marker circle
-        const userCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        userCircle.setAttribute('cx', userX);
-        userCircle.setAttribute('cy', userY);
-        userCircle.setAttribute('r', '12');
-        userCircle.setAttribute('fill', '#0060C6');
-        userCircle.setAttribute('stroke', 'white');
-        userCircle.setAttribute('stroke-width', '4');
-        svg.appendChild(userCircle);
-        
-        // Pulse ring
-        const pulseRing = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        pulseRing.setAttribute('cx', userX);
-        pulseRing.setAttribute('cy', userY);
-        pulseRing.setAttribute('r', '20');
-        pulseRing.setAttribute('fill', 'none');
-        pulseRing.setAttribute('stroke', '#0060C6');
-        pulseRing.setAttribute('stroke-width', '2');
-        pulseRing.setAttribute('opacity', '0.3');
-        svg.appendChild(pulseRing);
-        
-        // User label
-        const userText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        userText.setAttribute('x', userX);
-        userText.setAttribute('y', userY - 30);
-        userText.setAttribute('text-anchor', 'middle');
-        userText.setAttribute('fill', '#002955');
-        userText.setAttribute('font-weight', 'bold');
-        userText.setAttribute('font-size', '20');
-        userText.setAttribute('font-family', 'Red Hat Text, sans-serif');
-        userText.textContent = `You: ${userValue}%`;
-        svg.appendChild(userText);
-        
-        function normalDistribution(x, mean, stdDev) {
-            const exponent = -Math.pow(x - mean, 2) / (2 * Math.pow(stdDev, 2));
-            return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(exponent);
-        }
+   function drawBellCurve(userValue) {
+    const svg = document.getElementById('bellCurveSVG');
+    if (!svg) return;
+
+    svg.innerHTML = '';
+
+    const width = 1250;
+    const height = 468;
+    const padL = 60;
+    const padR = 60;
+    const baseline = height - 50;
+    const chartH = baseline - 80; // more room at top for labels
+    const chartTop = baseline - chartH; // y=80
+
+    const mean = 59;
+    const stdDev = 15;
+
+    function normalDist(x) {
+        return (1 / (stdDev * Math.sqrt(2 * Math.PI))) *
+            Math.exp(-Math.pow(x - mean, 2) / (2 * Math.pow(stdDev, 2)));
     }
 
+    function svgX(pct) {
+        return padL + (pct / 100) * (width - padL - padR);
+    }
+
+    function svgY(val) {
+        return baseline - (val * chartH * 30);
+    }
+
+    // Generate full curve points
+    const points = [];
+    for (let x = 0; x <= 100; x += 0.5) {
+        points.push({ x: svgX(x), y: svgY(normalDist(x)), pct: x });
+    }
+
+    // Defs for stroke gradient
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    const strokeGrad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+    strokeGrad.setAttribute('id', 'strokeGrad');
+    strokeGrad.setAttribute('x1', '0%'); strokeGrad.setAttribute('x2', '100%');
+    strokeGrad.setAttribute('y1', '0%'); strokeGrad.setAttribute('y2', '0%');
+    [['0%', '#7C3AED'], ['50%', '#4F46E5'], ['100%', '#0EA5E9']].forEach(([offset, color]) => {
+        const stop = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+        stop.setAttribute('offset', offset);
+        stop.setAttribute('stop-color', color);
+        strokeGrad.appendChild(stop);
+    });
+    defs.appendChild(strokeGrad);
+    svg.appendChild(defs);
+
+    const b10x = svgX(26);
+    const t10x = svgX(80);
+
+    // Left tail fill (#FFE2AE) — from 0% to bottom 10% (x=26)
+    const leftTailPoints = points.filter(p => p.pct <= 26);
+    if (leftTailPoints.length) {
+        const lFill = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        lFill.setAttribute('d', `M ${padL},${baseline} L ${leftTailPoints.map(p => `${p.x},${p.y}`).join(' L ')} L ${b10x},${baseline} Z`);
+        lFill.setAttribute('fill', '#FFE2AE');
+        svg.appendChild(lFill);
+    }
+
+    // Middle fill (light blue) — from bottom 10% to top 10%
+    const midPoints = points.filter(p => p.pct >= 26 && p.pct <= 80);
+    if (midPoints.length) {
+        const mFill = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        mFill.setAttribute('d', `M ${b10x},${baseline} L ${midPoints.map(p => `${p.x},${p.y}`).join(' L ')} L ${t10x},${baseline} Z`);
+        mFill.setAttribute('fill', 'rgba(147, 197, 253, 0.3)');
+        svg.appendChild(mFill);
+    }
+
+    // Right tail fill (#D9FFE8) — from top 10% (x=80) to 100%
+    const rightTailPoints = points.filter(p => p.pct >= 80);
+    if (rightTailPoints.length) {
+        const rFill = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        rFill.setAttribute('d', `M ${t10x},${baseline} L ${rightTailPoints.map(p => `${p.x},${p.y}`).join(' L ')} L ${width - padR},${baseline} Z`);
+        rFill.setAttribute('fill', '#D9FFE8');
+        svg.appendChild(rFill);
+    }
+
+    // Dashed marker lines — bottom and top 10%
+    const addDashedLine = (x) => {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x); line.setAttribute('y1', chartTop);
+        line.setAttribute('x2', x); line.setAttribute('y2', baseline);
+        line.setAttribute('stroke', '#CBD5E1');
+        line.setAttribute('stroke-width', '1.5');
+        line.setAttribute('stroke-dasharray', '5,4');
+        svg.appendChild(line);
+    };
+    addDashedLine(b10x);
+    addDashedLine(t10x);
+
+    // Zone labels above dashed lines
+    const addZoneLabel = (x, text, anchor) => {
+        const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        t.setAttribute('x', anchor === 'end' ? x - 6 : x + 6);
+        t.setAttribute('y', chartTop + 14);
+        t.setAttribute('text-anchor', anchor);
+        t.setAttribute('fill', '#94A3B8');
+        t.setAttribute('font-size', '22');
+        t.setAttribute('font-family', 'Red Hat Text, sans-serif');
+        t.textContent = text;
+        svg.appendChild(t);
+    };
+    addZoneLabel(b10x, 'Bottom 10%', 'end');
+    addZoneLabel(t10x, 'Top 10%', 'start');
+
+    // Curve stroke
+    const curvePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    curvePath.setAttribute('d', `M ${points.map(p => `${p.x},${p.y}`).join(' L ')}`);
+    curvePath.setAttribute('stroke', '#4D1EAD');
+    curvePath.setAttribute('stroke-width', '3');
+    curvePath.setAttribute('fill', 'none');
+    curvePath.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(curvePath);
+
+    // Baseline
+    const baselineEl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    baselineEl.setAttribute('x1', padL); baselineEl.setAttribute('y1', baseline);
+    baselineEl.setAttribute('x2', width - padR); baselineEl.setAttribute('y2', baseline);
+    baselineEl.setAttribute('stroke', '#CBD5E1');
+    baselineEl.setAttribute('stroke-width', '2');
+    svg.appendChild(baselineEl);
+
+    // Axis labels
+    const addAxisLabel = (x, text, anchor) => {
+        const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        t.setAttribute('x', x);
+        t.setAttribute('y', baseline + 28);
+        t.setAttribute('text-anchor', anchor);
+        t.setAttribute('fill', '#687887');
+        t.setAttribute('font-size', '22');
+        t.setAttribute('font-family', 'Red Hat Text, sans-serif');
+        t.textContent = text;
+        svg.appendChild(t);
+    };
+    addAxisLabel(padL, '0%', 'middle');
+    addAxisLabel(width - padR, '100%', 'middle');
+
+    // Average tick + label
+    const avgX = svgX(59);
+    const avgTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    avgTick.setAttribute('x1', avgX); avgTick.setAttribute('y1', baseline - 5);
+    avgTick.setAttribute('x2', avgX); avgTick.setAttribute('y2', baseline + 5);
+    avgTick.setAttribute('stroke', '#94A3B8');
+    avgTick.setAttribute('stroke-width', '2');
+    svg.appendChild(avgTick);
+    addAxisLabel(avgX, 'Average 59%', 'middle');
+
+    // ---- USER MARKER ----
+    const ux = svgX(userValue);
+    const uCurveY = svgY(normalDist(userValue));
+
+    // Full-height solid line
+    const userLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    userLine.setAttribute('x1', ux); userLine.setAttribute('y1', chartTop);
+    userLine.setAttribute('x2', ux); userLine.setAttribute('y2', baseline);
+    userLine.setAttribute('stroke', '#002955');
+    userLine.setAttribute('stroke-width', '2.5');
+    svg.appendChild(userLine);
+
+    // Percentage label — floats ABOVE the marker line
+    const pctLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    pctLabel.setAttribute('x', ux);
+    pctLabel.setAttribute('y', chartTop - 16);
+    pctLabel.setAttribute('text-anchor', 'middle');
+    pctLabel.setAttribute('fill', '#002955');
+    pctLabel.setAttribute('font-weight', '700');
+    pctLabel.setAttribute('font-size', '26');
+    pctLabel.setAttribute('font-family', 'Red Hat Text, sans-serif');
+    pctLabel.textContent = `${userValue}%`;
+    svg.appendChild(pctLabel);
+
+    // Small downward arrow just below the percentage text
+    const arrowTipY = chartTop + 4;
+    const arrowH = 14;
+    const arrowW = 12;
+    const arrowPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    arrowPoly.setAttribute('points', `${ux},${arrowTipY} ${ux - arrowW},${arrowTipY - arrowH} ${ux + arrowW},${arrowTipY - arrowH}`);
+    arrowPoly.setAttribute('fill', '#002955');
+    svg.appendChild(arrowPoly);
+
+    // YOU label — just below the arrow
+    const youLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    youLabel.setAttribute('x', ux);
+    youLabel.setAttribute('y', chartTop - 42);
+    youLabel.setAttribute('text-anchor', 'middle');
+    youLabel.setAttribute('fill', '#002955');
+    youLabel.setAttribute('font-weight', '700');
+    youLabel.setAttribute('font-size', '22');
+    youLabel.setAttribute('font-family', 'Red Hat Text, sans-serif');
+    youLabel.textContent = 'YOU';
+    svg.appendChild(youLabel);
+}
+  
     // Request snapshot handler
     function requestSnapshot() {
         alert('Thank you for your interest! You would be redirected to a Practice Snapshot request form. This is where you\'d integrate with your CRM or scheduling system.');
