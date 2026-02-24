@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (value >= 80) {
             resultEmoji.textContent = '🏆';
             resultTitle.textContent = 'Outstanding Performance!';
-            resultMessage.textContent = `At ${value}%, you're in the top 10% of practices! Your team is doing an excellent job with hygiene pre-appointments. Keep up the great work!`;
+            resultMessage.textContent = `At ${value}%, you're crushing it — top 10% is no small feat! But the best practices never stop looking for an edge. Let us show you how you stack up across all your key metrics with a free Practice Snapshot.`;
         } else if (value >= 59) {
             resultEmoji.textContent = '🎉';
             resultTitle.textContent = 'Above Average!';
