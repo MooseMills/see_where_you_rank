@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (value >= 59) {
             resultEmoji.textContent = '🎉';
             resultTitle.textContent = 'Above Average!';
-            resultMessage.textContent = `At ${value}%, you're performing above the industry average of 59%. You're on the right track! Let's explore how we can help you reach top-tier performance.`;
+            resultMessage.textContent = `At ${value}%, you're performing at or above the industry average of 59%. You're on the right track! Let's explore how we can help you reach top-tier performance.`;
         } else if (value >= 26) {
             resultEmoji.textContent = '💪';
             resultTitle.textContent = 'Room for Growth';
